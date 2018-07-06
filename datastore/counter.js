@@ -15,6 +15,7 @@ const zeroPaddedNumber = (num) => {
   return sprintf('%05d', num);
 };
 
+
 const readCounter = (callback) => {
   fs.readFile(exports.counterFile, (err, fileData) => {
     if (err) {
@@ -36,14 +37,17 @@ const writeCounter = (count, callback) => {
   });
 };
 
-// Public API - Fix this function //////////////////////////////////////////////
-
-exports.getNextUniqueId = () => {
-  counter = counter + 1;
-  return zeroPaddedNumber(counter);
+exports.getNextUniqueId = (callback) => {
+  readCounter(function(err, data){
+    writeCounter(data + 1, function(err, data){
+      callback(null, data);
+    })
+  });
 };
 
-
+exports.reformatId = (id) => {
+  return zeroPaddedNumber(Number(id));
+};
 
 // Configuration -- DO NOT MODIFY //////////////////////////////////////////////
 
